@@ -18,15 +18,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	--no damage
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCost(s.atkcost)
-	e3:SetTarget(s.atktg)
-	e3:SetOperation(s.atkop)
-	c:RegisterEffect(e3)
+
 end
 s.listed_series={0x7d8}
 function s.filter(c,e,tp)
@@ -60,35 +52,4 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 	Duel.SpecialSummonComplete()
-end
-function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToGraveAsCost() and c:IsStatus(STATUS_EFFECT_ENABLED) end
-	Duel.SendtoGrave(c,REASON_COST)
-end
-function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	if chk==0 then return d and a:GetControler()~=d:GetControler() end
-	if a:IsControler(1-tp) then a=d end
-	e:SetLabelObject(a)
-end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetTargetRange(1,0)
-		e1:SetValue(1)
-		e1:SetCondition(s.damcon)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE_CAL)
-		e1:SetLabelObject(tc)
-		Duel.RegisterEffect(e1,tp)
-	end
-end
-function s.damcon(e)
-	local tc=e:GetLabelObject()
-	return tc==Duel.GetAttacker() or tc==Duel.GetAttackTarget()
 end
