@@ -1,6 +1,6 @@
 {
 	"repos": [
-{
+                  {
 			"url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
 			"repo_name": "GPD Custom Cards",
 			"repo_path": "./repositories/GPDCustoms",
@@ -53,6 +53,5 @@
             "roomaddress": "127.0.0.1",
             "roomlistport": 7922,
             "duelport": 7911
-		}
     ]
 }
