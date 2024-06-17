@@ -1,10 +1,9 @@
 {
 	"repos": [
-                  {
-			"url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
-			"repo_name": "GPD Custom Cards",
-			"repo_path": "./repositories/GPDCustoms",
-                        "script_path": "script"
+		{
+			"url": "https://github.com/KSB-Custom/KSB-CCG",
+			"repo_name": "KSB Custom Cards",
+			"repo_path": "./repositories/KSBCustoms",
 			"should_update": true,
 			"should_read": true
 		},
@@ -17,14 +16,19 @@
 			"should_update": true,
 			"should_read": true
 		},
-		{
-			"url": "https://github.com/KSB-Custom/KSB-CCG",
-			"repo_name": "KSB Custom Cards",
-			"repo_path": "./repositories/KSBCustoms",
+
+                 
+                 {
+			"url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
+			"repo_name": "GPD Custom Cards",
+			"repo_path": "./repositories/GPDCustoms",
+                        "script_path": "script"
 			"should_update": true,
-			"should_read": true
-		}
-	],
+			"should_read": true,
+		},
+
+	        ],
+
 	"urls": [
 		{
 			"url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/master/{}.png",
@@ -48,10 +52,12 @@
 			"roomlistprotocol": "http",
 			"roomlistport": 7810
 		},
+                {
 		"name": "localhost",
             "address": "127.0.0.1",
             "roomaddress": "127.0.0.1",
             "roomlistport": 7922,
             "duelport": 7911
+		}
     ]
 }
