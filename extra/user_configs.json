@@ -1,63 +1,51 @@
 {
-	"repos": [
-		{
-			"url": "https://github.com/KSB-Custom/KSB-CCG",
-			"repo_name": "KSB Custom Cards",
-			"repo_path": "./repositories/KSBCustoms",
-			"should_update": true,
-			"should_read": true
-		},
-		{
-			"url": "https://github.com/Secuter/SecuterYGOCustomCards",
-			"repo_name": "Secuter Custom Cards",
-			"repo_path": "./repositories/secuter-custom-cards",
-			"data_path": "expansions",
-			"script_path": "script",
-			"should_update": true,
-			"should_read": true
-		},
-
-                 
-                 {
-			"url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
-			"repo_name": "GPD Custom Cards",
-			"repo_path": "./repositories/GPDCustoms",
-                        "script_path": "script"
-			"should_update": true,
-			"should_read": true,
-		},
-
-	        ],
-
-	"urls": [
-		{
-			"url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/master/{}.png",
-			"type": "pic"
-		},
-		{
-			"url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/master/field/{}.png",
-			"type": "field"
-		},
-		{
-			"url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/master/field/{}.jpg",
-			"type": "field"
-		}
-	],	
-	 "servers": [
-		{
-			"name": "Secuter Custom Cards",
-			"address": "duel.secutertools.win",
-			"duelport": 7820,
-			"roomaddress": "duel.secutertools.win",
-			"roomlistprotocol": "http",
-			"roomlistport": 7810
-		},
-                {
-		"name": "localhost",
-            "address": "127.0.0.1",
-            "roomaddress": "127.0.0.1",
-            "roomlistport": 7922,
-            "duelport": 7911
-		}
+    "repos": [
+        {
+	    "url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
+	    "repo_name": "GPD Custom Cards",
+	    "repo_path": "./repositories/GPDCustoms",
+	    "should_update": true,
+	    "should_read": true
+        },
+	{
+	     "url": "https://github.com/KSB-Custom/KSB-CCG",
+	     "repo_name": "KSB Custom Cards",
+	     "repo_path": "./repositories/KSBCustoms",
+ 	     "should_update": true,
+	     "should_read": true
+	},
+        {
+            "data_path": "expansions",
+            "repo_name": "Secuter Custom Cards",
+            "repo_path": "./repositories/secuter-custom-cards",
+            "script_path": "script",
+            "should_read": true,
+            "should_update": true,
+            "url": "https://github.com/Secuter/SecuterYGOCustomCards"
+        }
+    ],
+    "servers": [
+        {
+            "address": "duel.secutertools.win",
+            "duelport": 7820,
+            "name": "Secuter Custom Cards",
+            "roomaddress": "duel.secutertools.win",
+            "roomlistport": 7810,
+            "roomlistprotocol": "http"
+        }
+    ],
+    "urls": [
+        {
+            "type": "pic",
+            "url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/main/{}.png"
+        },
+        {
+            "type": "field",
+            "url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/main/field/{}.png"
+        },
+        {
+            "type": "field",
+            "url": "https://raw.githubusercontent.com/Secuter/SecuterYGOCustomCards-pics/main/field/{}.jpg"
+        }
     ]
 }
