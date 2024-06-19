@@ -26,6 +26,6 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
 	if #g>0 then
-		Duel.Destroy(g,REASON_EFFECT)
+		Duel.Remove(g,REASON_EFFECT)
 	end
 end
