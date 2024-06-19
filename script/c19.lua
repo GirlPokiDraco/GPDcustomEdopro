@@ -1,4 +1,4 @@
---AZTECA tezcatlipoca
+--Eternal Night Raging Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 --fusion material
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.tgop)
 	c:RegisterEffect(e2)
 	end
-	--Check for non-"AZTECA" monster
+	--Check for non-"Raging Dragon" monster
 function s.filter(c)
 	return c:IsFacedown() or not c:IsSetCard(0x7c9)
 end
