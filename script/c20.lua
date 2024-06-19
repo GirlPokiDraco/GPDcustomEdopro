@@ -35,6 +35,14 @@ function s.initial_effect(c)
 	e3:SetTarget(s.sptg2)
 	e3:SetOperation(s.spop2)
 	c:RegisterEffect(e3)
+	--change race
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CHANGE_RACE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetValue(RACE_DRAGON)
+	c:RegisterEffect(e4)
 end
 s.listed_series={0xfe,0xfd}
 function s.atkfilter(c)
