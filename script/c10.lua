@@ -22,16 +22,9 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tdtg)
 	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CHANGE_RACE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(0,LOCATION_MZONE)
-	e3:SetValue(RACE_DRAGON)
-	c:RegisterEffect(e3)
 end
 function s.spfilter(c,tp)
-	return (c:IsSetCard(0x7c9))and c:IsLevelBelow(10) and c:IsAbleToRemoveAsCost() and Duel.GetMZoneCount(tp,c)>0
+	return (c:IsSetCard(0x7c9))and c:IsLevelBelow(12) or c:IsRankBelow(4) and c:IsAbleToRemoveAsCost() and Duel.GetMZoneCount(tp,c)>0
 		and aux.SpElimFilter(c,true)
 end
 function s.spcon(e,c)
