@@ -49,7 +49,7 @@ function s.initial_effect(c)
 end
 s.listed_names={12}
 function s.ffilter(c,fc,sumtype,tp)
-	return c:IsSetCard(0x7c9 ,fc,sumtype,tp)
+	return c:IsRace(RACE_DRAGON,fc,sumtype,tp)
 end
 function s.valcheck(e,c)
 	if c:GetMaterial():IsExists(Card.IsCode,1,nil,12) then
