@@ -50,7 +50,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.tdfilter(c,tp)
 	return (c:IsSetCard(0x7c9)) and (c:IsAbleToDeck() or c:IsAbleToExtra())
-		and ((c:IsType(TYPE_XYZ|TYPE_FUSION) and Duel.IsPlayerCanDraw(tp,1)) or c:IsType(TYPE_SYNCHRO|TYPE_RITUAL))
+		and ((c:IsType(TYPE_XYZ|TYPE_FUSION) and Duel.IsPlayerCanDraw(tp,1)) or c:IsType(TYPE_LINK|TYPE_RITUAL))
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.tdfilter(chkc,tp) end
@@ -68,7 +68,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsType(TYPE_XYZ|TYPE_FUSION) and tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
-	elseif tc:IsType(TYPE_SYNCHRO|TYPE_RITUAL) and tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+	elseif tc:IsType(TYPE_LINK|TYPE_RITUAL) and tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
 		and c:IsFaceup() and c:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		--Increase ATK
