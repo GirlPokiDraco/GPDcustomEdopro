@@ -1,4 +1,4 @@
---星杯剣士アウラム
+--Night Raging Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
