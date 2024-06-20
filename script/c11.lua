@@ -1,36 +1,43 @@
 --Raging Dragon Fusion
-local s,id=GetID()
+
+local s, id = GetID()
+
 function s.initial_effect(c)
-	c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9)))
-	--salvage
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCost(s.thcost)
-	e2:SetTarget(s.thtg)
-	e2:SetOperation(s.thop)
-	c:RegisterEffect(e2)
+    -- Activate
+    local e1 = Effect.CreateEffect(c)
+    e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e1:SetType(EFFECT_TYPE_ACTIVATE)
+    e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetHintTiming(0, TIMING_MAIN_END)
+    e1:SetTarget(s.target)
+    e1:SetOperation(s.operation)
+    c:RegisterEffect(e1)
 end
-s.listed_series={0x7c9}
-function s.thfilter(c)
-	return c:IsSetCard(0x7c9) and c:IsMonster() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+
+function s.filter1(c, e)
+    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and c:IsCanBeFusionMaterial() and c:IsLocation(LOCATION_DECK) and c:IsAbleToGrave()
 end
-function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE|LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE|LOCATION_MZONE,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+
+function s.filter2(c, e)
+    return c:IsType(TYPE_FUSION) and c:IsRace(RACE_DRAGON) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_FUSION, PLAYER_NONE, false, false)
 end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+
+function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
+    if chk == 0 then
+        return Duel.IsExistingMatchingCard(s.filter1, tp, LOCATION_DECK, 0, 1, nil, e)
+            and Duel.IsExistingMatchingCard(s.filter2, tp, LOCATION_EXTRA, 0, 1, nil, e)
+    end
+    Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_EXTRA)
 end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
-	end
+
+function s.operation(e, tp, eg, ep, ev, re, r, rp)
+    local ftg = Duel.SelectMatchingCard(tp, s.filter1, tp, LOCATION_DECK, 0, 1, 1, nil, e):GetFirst()
+    if not ftg then return end
+    local ftc = Duel.SelectMatchingCard(tp, s.filter2, tp, LOCATION_EXTRA, 0, 1, 1, nil, e):GetFirst()
+    if not ftc then return end
+    local fmat = Group.FromCards(ftg)
+    ftc:SetMaterial(fmat)
+    Duel.SendtoGrave(fmat, REASON_EFFECT + REASON_MATERIAL + REASON_FUSION)
+    Duel.BreakEffect()
+    Duel.SpecialSummon(ftc, SUMMON_TYPE_FUSION, tp, tp, false, false, POS_FACEUP)
 end
