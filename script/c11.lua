@@ -1,5 +1,4 @@
 -- Dragon Fusion Spell
--- Scripted by ChatGPT
 
 local s, id = GetID()
 
@@ -25,20 +24,23 @@ end
 
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
     if chk == 0 then
-        return Duel.IsExistingMatchingCard(s.filter1, tp, LOCATION_DECK, 0, 1, nil, e)
-            and Duel.IsExistingMatchingCard(s.filter2, tp, LOCATION_EXTRA, 0, 1, nil, e)
+        return Duel.IsExistingMatchingCard(s.filter2, tp, LOCATION_EXTRA, 0, 1, nil, e)
     end
-    Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_EXTRA)
+    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+    local ftc = Duel.SelectMatchingCard(tp, s.filter2, tp, LOCATION_EXTRA, 0, 1, 1, nil, e):GetFirst()
+    if not ftc then return end
+    e:SetLabelObject(ftc)
+    Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, ftc, 1, tp, LOCATION_EXTRA)
 end
 
 function s.operation(e, tp, eg, ep, ev, re, r, rp)
-    local ftg = Duel.SelectMatchingCard(tp, s.filter1, tp, LOCATION_DECK, 0, 1, 1, nil, e):GetFirst()
-    if not ftg then return end
-    local ftc = Duel.SelectMatchingCard(tp, s.filter2, tp, LOCATION_EXTRA, 0, 1, 1, nil, e):GetFirst()
+    local ftc = e:GetLabelObject()
     if not ftc then return end
-    local fmat = Group.FromCards(ftg)
-    ftc:SetMaterial(fmat)
-    Duel.SendtoGrave(fmat, REASON_EFFECT + REASON_MATERIAL + REASON_FUSION)
-    Duel.BreakEffect()
-    Duel.SpecialSummon(ftc, SUMMON_TYPE_FUSION, tp, tp, false, false, POS_FACEUP)
+    local fmat = Duel.SelectMatchingCard(tp, s.filter1, tp, LOCATION_DECK, 0, ftc:GetMaterialCount(), ftc:GetMaterialCount(), nil, e)
+    if #fmat == ftc:GetMaterialCount() then
+        ftc:SetMaterial(fmat)
+        Duel.SendtoGrave(fmat, REASON_EFFECT + REASON_MATERIAL + REASON_FUSION)
+        Duel.BreakEffect()
+        Duel.SpecialSummon(ftc, SUMMON_TYPE_FUSION, tp, tp, false, false, POS_FACEUP)
+    end
 end
