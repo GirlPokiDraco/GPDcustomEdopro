@@ -2,7 +2,7 @@
 local s,id=GetID()
 
 function s.initial_effect(c)
-    -- Fusion Summon
+    -- Fusion Summon using materials from Deck
     c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.SelectFusionMaterial(s.matfilter)))
 
     -- Salvage
@@ -19,10 +19,10 @@ end
 
 s.listed_series={0x7c9}
 
--- Function to select Fusion Materials from the Deck and the Graveyard
+-- Function to select Fusion Materials from the Deck only
 function Fusion.SelectFusionMaterial(filter)
     return function(c,mg)
-        local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
+        local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_DECK,0,c)
         return mg1:Filter(filter,nil)
     end
 end
