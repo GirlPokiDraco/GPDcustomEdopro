@@ -1,7 +1,7 @@
 -- Greed Raging Dragon
 local s,id=GetID()
 function s.initial_effect(c)
-    --shuffle & draw (when summoned)
+    --shuffle grave and draw
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,1))
     e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
@@ -9,13 +9,13 @@ function s.initial_effect(c)
     e1:SetCode(EVENT_SUMMON_SUCCESS)
     e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
     e1:SetCountLimit(1,id)
-    e1:SetTarget(s.drtg1)
-    e1:SetOperation(s.drop1)
+    e1:SetTarget(s.drtg)
+    e1:SetOperation(s.drop)
     c:RegisterEffect(e1)
     local e2=e1:Clone()
     e2:SetCode(EVENT_SPSUMMON_SUCCESS)
     c:RegisterEffect(e2)
-    --shuffle & draw (when sent to GY)
+    --shuffle removed and draw
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(id,2))
     e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
@@ -23,53 +23,61 @@ function s.initial_effect(c)
     e3:SetCode(EVENT_TO_GRAVE)
     e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
     e3:SetCountLimit(1,id+100)
-    e3:SetCondition(s.drcon2)
+    e3:SetCondition(s.tdcon)
     e3:SetTarget(s.drtg2)
     e3:SetOperation(s.drop2)
     c:RegisterEffect(e3)
 end
 
-function s.tdfilter1(c)
-    return (c:IsSetCard(0x7c9) or c:IsSetCard(0x7c9)) and c:IsAbleToDeck()
+function s.tdfilter(c,e)
+    return (c:IsSetCard(0x7dc9) or c:IsSetCard(0x7c9)) and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
 end
 
-function s.tdfilter2(c)
-    return c:IsSetCard(0x7c9) and c:IsAbleToDeck()
-end
-
-function s.drtg1(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(s.tdfilter1,tp,LOCATION_GRAVE,0,5,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,5,tp,LOCATION_GRAVE)
+function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return false end
+    local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil,e)
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
+        and aux.SelectUnselectGroup(tg,e,tp,5,5,aux.dncheck,0) end
+    local g=aux.SelectUnselectGroup(tg,e,tp,5,5,aux.dncheck,1,tp,HINTMSG_TODECK)
+    Duel.SetTargetCard(g)
+    Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
     Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 
-function s.drop1(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(s.tdfilter1,tp,LOCATION_GRAVE,0,nil)
-    if #g>=5 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-        local sg=g:Select(tp,5,5,nil)
-        Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+function s.drop(e,tp,eg,ep,ev,re,r,rp)
+    local tg=Duel.GetTargetCards(e)
+    if #tg<=0 then return end
+    Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
+    Duel.ShuffleDeck(tp)
+    local g=Duel.GetOperatedGroup()
+    if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then
         Duel.BreakEffect()
         Duel.Draw(tp,2,REASON_EFFECT)
     end
 end
 
-function s.drcon2(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():IsReason(REASON_EFFECT+REASON_COST) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 
-function s.drtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(s.tdfilter2,tp,LOCATION_REMOVED,0,5,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,5,tp,LOCATION_REMOVED)
+function s.drtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return false end
+    local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,0,nil,e)
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
+        and aux.SelectUnselectGroup(tg,e,tp,5,5,aux.dncheck,0) end
+    local g=aux.SelectUnselectGroup(tg,e,tp,5,5,aux.dncheck,1,tp,HINTMSG_TODECK)
+    Duel.SetTargetCard(g)
+    Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
     Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 
 function s.drop2(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(s.tdfilter2,tp,LOCATION_REMOVED,0,nil)
-    if #g>=5 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-        local sg=g:Select(tp,5,5,nil)
-        Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+    local tg=Duel.GetTargetCards(e)
+    if #tg<=0 then return end
+    Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
+    Duel.ShuffleDeck(tp)
+    local g=Duel.GetOperatedGroup()
+    if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then
         Duel.BreakEffect()
         Duel.Draw(tp,2,REASON_EFFECT)
     end
