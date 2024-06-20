@@ -8,7 +8,6 @@ function s.initial_effect(c)
     e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
     e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
     e1:SetCode(EVENT_SUMMON_SUCCESS)
-    e1:SetCountLimit(1,{id,1})
     e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
     e1:SetTarget(s.thtg)
     e1:SetOperation(s.thop)
@@ -16,6 +15,13 @@ function s.initial_effect(c)
     local e2=e1:Clone()
     e2:SetCode(EVENT_SPSUMMON_SUCCESS)
     c:RegisterEffect(e2)
+    -- Limit each effect to once per turn
+    local e1_limit=e1:Clone()
+    e1_limit:SetCountLimit(1,id)
+    c:RegisterEffect(e1_limit)
+    local e2_limit=e2:Clone()
+    e2_limit:SetCountLimit(1,id)
+    c:RegisterEffect(e2_limit)
 
     -- Special Summon from Graveyard when used as Fusion or Link Material
     local e3=Effect.CreateEffect(c)
@@ -29,6 +35,10 @@ function s.initial_effect(c)
     e3:SetTarget(s.sptg)
     e3:SetOperation(s.spop)
     c:RegisterEffect(e3)
+    -- Limit this effect to once per turn
+    local e3_limit=e3:Clone()
+    e3_limit:SetCountLimit(1,id+100)
+    c:RegisterEffect(e3_limit)
 end
 
 s.listed_series={0x7c9}
@@ -59,7 +69,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
     return c:IsLocation(LOCATION_GRAVE) and (r & (REASON_FUSION + REASON_LINK)) ~= 0
 end
 
--- Costo para enviar una carta desde el Deck al Cementerio
+-- Cost to send a card from Deck to Graveyard
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_DECK,0,1,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
