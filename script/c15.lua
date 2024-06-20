@@ -79,6 +79,8 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
         if tc then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
             local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
+            if not mat1 then return end
+            mat1:RemoveCard(e:GetHandler()) -- Remove "Abyss Raging Dragon" from materials
             tc:SetMaterial(mat1)
             Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
             Duel.BreakEffect()
