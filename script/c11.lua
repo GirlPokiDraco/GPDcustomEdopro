@@ -22,8 +22,8 @@ s.listed_series={0x7c9}
 -- Function to select Fusion Materials from the Deck and the Graveyard
 function Fusion.SelectFusionMaterial(filter)
     return function(c,mg)
-        local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
-        return mg1:Filter(filter,nil)
+        local mg=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
+        return mg:Filter(filter,nil)
     end
 end
 
