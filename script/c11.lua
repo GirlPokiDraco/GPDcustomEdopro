@@ -3,7 +3,7 @@ local s,id=GetID()
 
 function s.initial_effect(c)
     -- Fusion Summon
-    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.OnFieldMat(Card.IsAbleToGraveAsCost)))
+    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.SelectFusionMaterial(Card.IsAbleToGraveAsCost)))
 
     -- Salvage
     local e2=Effect.CreateEffect(c)
@@ -19,23 +19,12 @@ end
 
 s.listed_series={0x7c9}
 
--- Function to check if a card can be used as Fusion Material
-function Fusion.OnFieldMat(filter)
-    return function(c,sc,sumtype,tp)
-        if c:IsLocation(LOCATION_ONFIELD) then
-            return filter(c) and c:IsCanBeFusionMaterial(sc,tp)
-        elseif c:IsLocation(LOCATION_DECK) then
-            return filter(c) and c:IsCanBeFusionMaterial(sc,tp,true)
-        else
-            return false
-        end
+-- Function to select Fusion Materials from the Deck and the Graveyard
+function Fusion.SelectFusionMaterial(filter)
+    return function(c,mg)
+        local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
+        return mg1:Filter(Fusion.MatchMaterialFunction(c),nil,mg1,mg)
     end
-end
-
--- Function to select Fusion Materials from the Deck as well as the Graveyard
-function Fusion.SelectFusionMaterial(c,mg)
-    local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
-    return mg1:Filter(Fusion.MatchMaterialFunction(c),nil,mg1,mg)
 end
 
 -- Salvage Effect
