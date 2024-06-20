@@ -3,7 +3,7 @@ local s,id=GetID()
 
 function s.initial_effect(c)
     -- Fusion Summon
-    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.SelectFusionMaterial(Card.IsAbleToGraveAsCost)))
+    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.SelectFusionMaterial(Card.IsAbleToRemoveAsCost)))
 
     -- Salvage
     local e2=Effect.CreateEffect(c)
