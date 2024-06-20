@@ -1,4 +1,5 @@
---Raging Dragon Fusion
+-- Dragon Fusion Spell
+-- Scripted by ChatGPT
 
 local s, id = GetID()
 
@@ -15,11 +16,11 @@ function s.initial_effect(c)
 end
 
 function s.filter1(c, e)
-    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and c:IsCanBeFusionMaterial() and c:IsLocation(LOCATION_DECK) and c:IsAbleToGrave()
+    return c:IsRace(RACE_DRAGON) and c:IsCanBeFusionMaterial() and c:IsLocation(LOCATION_DECK) and c:IsAbleToGrave()
 end
 
 function s.filter2(c, e)
-    return c:IsType(TYPE_FUSION) and c:IsRace(RACE_DRAGON) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_FUSION, PLAYER_NONE, false, false)
+    return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_FUSION, PLAYER_NONE, false, false)
 end
 
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
