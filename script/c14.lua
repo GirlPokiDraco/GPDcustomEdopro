@@ -47,7 +47,9 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if #tg<=0 then return end
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then
+		Duel.ShuffleDeck(tp)
+	end
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
 	if ct>0 then
 		Duel.BreakEffect()
@@ -65,6 +67,7 @@ function s.rec_operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		Duel.BreakEffect()
+		Duel.ShuffleDeck(tp)
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end
 end
