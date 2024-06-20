@@ -59,11 +59,11 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
     return c:IsLocation(LOCATION_GRAVE) and (r & (REASON_FUSION + REASON_LINK)) ~= 0
 end
 
--- Cost to send a card to Graveyard
+-- Costo para enviar una carta desde el Deck al Cementerio
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_DECK,0,1,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-    local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_DECK,0,1,1,nil)
     Duel.SendtoGrave(g,REASON_COST)
 end
 
