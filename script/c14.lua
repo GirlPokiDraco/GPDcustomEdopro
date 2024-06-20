@@ -37,14 +37,14 @@ function s.tdrop(e, tp, eg, ep, ev, re, r, rp)
     local ct = 0
     if s.CanReturnToDeck(tp) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
-        local g = Duel.SelectMatchingCard(tp, s.tdfilter, tp, LOCATION_REMOVED, 0, 5, 5, nil, e, tp)
+        local g = Duel.SelectMatchingCard(tp, s.tdfilter, tp, LOCATION_REMOVED, 0, 5, 5, nil, tp)
         if #g > 0 then
             Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_EFFECT)
             ct = #g
         end
     elseif s.CanReturnToDeck(tp, true) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
-        local g = Duel.SelectMatchingCard(tp, s.tdfilter, tp, LOCATION_GRAVE, 0, 5, 5, nil, e, tp)
+        local g = Duel.SelectMatchingCard(tp, s.tdfilter, tp, LOCATION_GRAVE, 0, 5, 5, nil, tp)
         if #g > 0 then
             Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_EFFECT)
             ct = #g
@@ -57,7 +57,7 @@ function s.tdrop(e, tp, eg, ep, ev, re, r, rp)
     end
 end
 
-function s.tdfilter(c, e, tp)
+function s.tdfilter(c, tp)
     return c:IsSetCard(0x7c9) and c:IsAbleToDeck()
 end
 
