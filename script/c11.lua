@@ -1,7 +1,7 @@
 --Raging Dragon Fusion
 local s,id=GetID()
 function s.initial_effect(c)
-    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.FilterAdditional,nil,s.matcon))
+    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.FilterAdditional,Fusion.SummonByFilter(s.matcon)))
     --salvage
     local e2=Effect.CreateEffect(c)
     e2:SetCategory(CATEGORY_TOHAND)
@@ -15,8 +15,8 @@ function s.initial_effect(c)
 end
 s.listed_series={0x7c9}
 
-function s.matcon(sg,e,tp,mg)
-    return sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<=0
+function s.matcon(c,e,tp,sumtype,mg)
+    return c:IsLocation(LOCATION_DECK) and c:IsSetCard(0x7c9)
 end
 
 function s.thfilter(c)
