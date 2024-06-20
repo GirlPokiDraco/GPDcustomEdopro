@@ -27,7 +27,7 @@ function s.initial_effect(c)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():IsReason(REASON_DESTROY)
+    return e:GetHandler():IsPreviousLocation(LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD)
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
