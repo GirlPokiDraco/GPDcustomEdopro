@@ -43,7 +43,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.fusfilter1(c,e)
-    return c:IsCode(15) and not c:IsImmuneToEffect(e)
+    return not c:IsImmuneToEffect(e)
 end
 
 function s.fusfilter2(c,e,tp,m,f,chkf)
@@ -79,7 +79,6 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
         if tc then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
             local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
-            if not mat1 then return end
             tc:SetMaterial(mat1)
             Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
             Duel.BreakEffect()
