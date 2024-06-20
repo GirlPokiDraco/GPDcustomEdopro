@@ -23,7 +23,7 @@ s.listed_series={0x7c9}
 function Fusion.SelectFusionMaterial(filter)
     return function(c,mg)
         local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_HAND+LOCATION_MZONE+LOCATION_DECK,0,c)
-        return mg1:Filter(Fusion.MatchMaterialFunction(c),nil,mg1,mg)
+        return mg1:Filter(Fusion.OnFieldMat(filter),nil,mg)
     end
 end
 
