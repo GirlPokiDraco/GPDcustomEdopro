@@ -1,5 +1,4 @@
 -- Greed Raging Dragon
--- Greed Raging Dragon
 local s,id=GetID()
 
 function s.initial_effect(c)
@@ -62,7 +61,7 @@ function s.rec_condition(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.rec_operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsAbleToDeck),tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
+	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsAbleToDeck),tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		Duel.BreakEffect()
