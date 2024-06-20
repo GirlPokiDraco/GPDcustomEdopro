@@ -1,33 +1,28 @@
 --Raging Dragon Fusion
 local s,id=GetID()
 function s.initial_effect(c)
-    c:RegisterEffect(Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.FilterAdditional,Fusion.SummonByFilter(s.matcon)))
     --salvage
-    local e2=Effect.CreateEffect(c)
-    e2:SetCategory(CATEGORY_TOHAND)
-    e2:SetDescription(aux.Stringid(id,1))
-    e2:SetType(EFFECT_TYPE_IGNITION)
-    e2:SetRange(LOCATION_GRAVE)
-    e2:SetCost(s.thcost)
-    e2:SetTarget(s.thtg)
-    e2:SetOperation(s.thop)
-    c:RegisterEffect(e2)
+    local e1=Effect.CreateEffect(c)
+    e1:SetCategory(CATEGORY_TOHAND)
+    e1:SetDescription(aux.Stringid(id,1))
+    e1:SetType(EFFECT_TYPE_IGNITION)
+    e1:SetRange(LOCATION_GRAVE)
+    e1:SetCost(s.thcost)
+    e1:SetTarget(s.thtg)
+    e1:SetOperation(s.thop)
+    c:RegisterEffect(e1)
 end
 s.listed_series={0x7c9}
 
-function s.matcon(c,e,tp,sumtype,mg)
-    return c:IsLocation(LOCATION_DECK) and c:IsSetCard(0x7c9)
-end
-
-function s.thfilter(c)
-    return c:IsSetCard(0x7c9) and c:IsMonster() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+function s.matfilter(c)
+    return c:IsSetCard(0x7c9) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_DECK) and c:IsAbleToGraveAsCost()
 end
 
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-    Duel.Remove(g,POS_FACEUP,REASON_COST)
+    if chk==0 then return Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+    local g=Duel.SelectMatchingCard(tp,s.matfilter,tp,LOCATION_DECK,0,1,1,nil)
+    Duel.SendtoGrave(g,REASON_COST)
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
