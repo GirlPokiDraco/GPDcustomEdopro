@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	end
+end
 
 function s.spsumfilter(c,e,tp)
 	return c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -31,7 +31,6 @@ function s.spsumop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spsumfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,2,2,nil,e,tp)
 	if #g>0 then
 		for tc in aux.Next(g) do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 			-- Cambiar el nivel de los monstruos invocados a 4
 			local e1=Effect.CreateEffect(tc)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -41,6 +40,8 @@ function s.spsumop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(4)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1,true)
+			-- Invocar al monstruo después de aplicar el cambio de nivel
+			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 		Duel.SpecialSummonComplete()
 	end
