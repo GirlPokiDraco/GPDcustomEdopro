@@ -24,6 +24,14 @@ function s.initial_effect(c)
     e2:SetOperation(s.fusop)
     e2:SetCountLimit(1,{id,1})
     c:RegisterEffect(e2)
+
+    -- Fusion Material Obligatorio
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_SINGLE)
+    e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e3:SetCode(EFFECT_FUSION_MATERIAL)
+    e3:SetValue(s.fuslimit)
+    c:RegisterEffect(e3)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
@@ -86,4 +94,9 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
             tc:CompleteProcedure()
         end
     end
+end
+
+function s.fuslimit(e,c)
+    if not c then return false end
+    return c:IsRace(RACE_DRAGON)
 end
