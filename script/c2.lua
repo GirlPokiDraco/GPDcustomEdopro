@@ -16,17 +16,17 @@ function s.initial_effect(c)
     e2:SetCode(EVENT_SPSUMMON_SUCCESS)
     c:RegisterEffect(e2)
 
-    --Add to hand when used as Fusion or Link Material
+    --Draw a card when used as Fusion or Link Material
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(id,1))
-    e3:SetCategory(CATEGORY_TOHAND)
+    e3:SetCategory(CATEGORY_DRAW)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e3:SetProperty(EFFECT_FLAG_DELAY)
     e3:SetCode(EVENT_BE_MATERIAL)
     e3:SetCountLimit(1,{id,1})
-    e3:SetCondition(s.thcon)
-    e3:SetTarget(s.thtg)
-    e3:SetOperation(s.thop)
+    e3:SetCondition(s.drcon)
+    e3:SetTarget(s.drtg)
+    e3:SetOperation(s.drop)
     c:RegisterEffect(e3)
 end
 
@@ -52,24 +52,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
     return r==REASON_FUSION or r==REASON_LINK
 end
 
-function s.thfilter(c)
-    return c:IsAbleToHand()
+function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
-end
-
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-    if #g>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
-    end
+function s.drop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Draw(tp,1,REASON_EFFECT)
 end
