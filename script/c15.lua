@@ -17,14 +17,14 @@ function s.initial_effect(c)
     --Fusion Summon "Raging Dragon" using this card
 	--spsummon
 	local params = {aux.FilterBoolFunction(Card.IsSetCard,0x7c9),Fusion.InHandMat,nil,nil,Fusion.ForcedHandler}
-	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,id)
-	e1:SetTarget(Fusion.SummonEffTG(table.unpack(params)))
-	e1:SetOperation(Fusion.SummonEffOP(table.unpack(params)))
-	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,id)
+	e2:SetTarget(Fusion.SummonEffTG(table.unpack(params)))
+	e2:SetOperation(Fusion.SummonEffOP(table.unpack(params)))
+	c:RegisterEffect(e2)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
