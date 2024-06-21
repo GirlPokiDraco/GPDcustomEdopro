@@ -18,8 +18,8 @@ end
 
 function s.negateCondition(e,tp,eg,ep,ev,re,r,rp)
     -- Check if it's the opponent's effect that adds cards from their Deck to their hand
-    return rp~=tp and Duel.GetCurrentChain()>1 and re:IsActiveType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)
-        and Duel.IsChainDisablable(ev)
+    return rp~=tp and Duel.GetCurrentChain()>1 and re:IsHasType(EFFECT_TYPE_ACTIVATE) 
+        and Duel.IsChainNegatable(ev) and re:GetHandler():IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)
 end
 
 function s.negateCost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -33,7 +33,7 @@ function s.negateTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.negateOperation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateEffect(ev)
+	Duel.NegateActivation(ev)
     -- Get the cards added by your opponent's effect
     local addedCards=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_DECK)
     if #addedCards>0 then
