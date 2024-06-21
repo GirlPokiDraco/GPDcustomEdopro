@@ -1,6 +1,5 @@
 -- Dragón Furioso Audaz
 local s,id=GetID()
-
 function s.initial_effect(c)
     -- Efecto 1: Invocar 2 copias de esta carta desde el Deck o Cementerio y cambiar su nivel a 4
 	local e1=Effect.CreateEffect(c)
@@ -61,10 +60,10 @@ end
 
 function s.desmaterial(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsPreviousLocation(LOCATION_MZONE) then
-		Debug.Message("Desmaterial triggered: ", c:GetName())
+	if c and c:IsPreviousLocation(LOCATION_MZONE) then
+		return r==REASON_XYZ
 	end
-	return r==REASON_XYZ and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_XYZ)
+	return false
 end
 
 function s.destarget(e,tp,eg,ep,ev,re,r,rp,chk)
