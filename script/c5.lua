@@ -1,7 +1,7 @@
 -- Dragón Furioso Audaz
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Efecto 1: Invocar 2 copias de esta carta desde el Deck o Cementerio
+    -- Efecto 1: Invocar 2 copias de esta carta desde el Deck o Cementerio y cambiar su nivel a 4
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -44,6 +44,15 @@ function s.spsumop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		for tc in aux.Next(g) do
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+			-- Cambiar el nivel de los monstruos invocados a 4
+			local e1=Effect.CreateEffect(tc)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCode(EFFECT_CHANGE_LEVEL)
+			e1:SetValue(4)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1,true)
 		end
 		Duel.SpecialSummonComplete()
 	end
