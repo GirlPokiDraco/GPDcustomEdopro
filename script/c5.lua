@@ -1,49 +1,71 @@
---Blod Raging Dragon
+-- Dragón Furioso Audaz
 local s,id=GetID()
 function s.initial_effect(c)
-	--Negate
+    -- Efecto 1: Invocar 2 copias de esta carta desde el Deck o Cementerio
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DISABLE)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_CHAINING)
-	e1:SetRange(LOCATION_HAND)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.discon)
-	e1:SetCost(s.discost)
-	e1:SetTarget(s.distg)
-	e1:SetOperation(s.disop)
+	e1:SetTarget(s.spsumtg)
+	e1:SetOperation(s.spsumop)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+
+    -- Efecto 2: Descartar una carta al azar de la mano del oponente al ser desacoplada como material XYZ
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_DECKDES)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_BE_MATERIAL)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCondition(s.desmaterial)
+	e3:SetTarget(s.destarget)
+	e3:SetOperation(s.desoperation)
+	c:RegisterEffect(e3)
 end
-function s.check(ev,re)
-	return function(category,checkloc)
-		if not checkloc and re:IsHasCategory(category) then return true end
-		local ex1,g1,gc1,dp1,dv1=Duel.GetOperationInfo(ev,category)
-		local ex2,g2,gc2,dp2,dv2=Duel.GetPossibleOperationInfo(ev,category)
-		if not (ex1 or ex2) then return false end
-		if category==CATEGORY_DRAW or category==CATEGORY_DECKDES then return true end
-		local g=Group.CreateGroup()
-		if g1 then g:Merge(g1) end
-		if g2 then g:Merge(g2) end
-		return (((dv1 or 0)|(dv2 or 0))&LOCATION_DECK)~=0 or (#g>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK))
+
+function s.spsumfilter(c,e,tp)
+	return c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+
+function s.spsumtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+		and Duel.IsExistingMatchingCard(s.spsumfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,2,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK+LOCATION_GRAVE)
+end
+
+function s.spsumop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
+	local g=Duel.SelectMatchingCard(tp,s.spsumfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,2,2,nil,e,tp)
+	if #g>0 then
+		for tc in aux.Next(g) do
+			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+		end
+		Duel.SpecialSummonComplete()
 	end
 end
-function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsDisabled() or not Duel.IsChainDisablable(ev) then return false end
-	local checkfunc=s.check(ev,re)
-	return checkfunc(CATEGORY_TOHAND,true) or checkfunc(CATEGORY_SPECIAL_SUMMON,true)
-		or checkfunc(CATEGORY_TOGRAVE,true) or checkfunc(CATEGORY_DRAW,true) or checkfunc(CATEGORY_DRAW,false)
-		or checkfunc(CATEGORY_SEARCH,false) or checkfunc(CATEGORY_DECKDES,true) or checkfunc(CATEGORY_DECKDES,false)
-end
-function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+
+function s.desmaterial(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsDiscardable() end
-	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+	return r==REASON_XYZ and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_XYZ)
 end
-function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not re:GetHandler():IsStatus(STATUS_DISABLED) end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+
+function s.destarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT) end
+	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,1-tp,1)
 end
-function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateEffect(ev)
+
+function s.desoperation(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+	if #g>0 then
+		Duel.ConfirmCards(tp,g)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local sg=g:RandomSelect(tp,1)
+		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
+		Duel.ShuffleHand(1-tp)
+	end
 end
