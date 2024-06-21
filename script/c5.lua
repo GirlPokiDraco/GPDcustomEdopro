@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-end
+	end
 
 function s.spsumfilter(c,e,tp)
 	return c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -30,23 +30,17 @@ function s.spsumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
 	local g=Duel.SelectMatchingCard(tp,s.spsumfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,2,2,nil,e,tp)
 	if #g>0 then
-		-- Flag to track if the level change effect has been applied
-		local applied = false
 		for tc in aux.Next(g) do
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			-- Apply level change effect only once
-			if not applied then
-				-- Cambiar el nivel de los monstruos invocados a 4
-				local e1=Effect.CreateEffect(tc)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-				e1:SetRange(LOCATION_MZONE)
-				e1:SetCode(EFFECT_CHANGE_LEVEL)
-				e1:SetValue(4)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1,true)
-				applied = true
-			end
+			-- Cambiar el nivel de los monstruos invocados a 4
+			local e1=Effect.CreateEffect(tc)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCode(EFFECT_CHANGE_LEVEL)
+			e1:SetValue(4)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1,true)
 		end
 		Duel.SpecialSummonComplete()
 	end
