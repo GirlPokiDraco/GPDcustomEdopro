@@ -79,5 +79,14 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
         Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+        -- Cambiar el nivel del monstruo invocado a 4
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+        e1:SetRange(LOCATION_MZONE)
+        e1:SetCode(EFFECT_CHANGE_LEVEL)
+        e1:SetValue(4)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+        c:RegisterEffect(e1,true)
     end
 end
