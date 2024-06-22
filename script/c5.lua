@@ -22,7 +22,6 @@ function s.initial_effect(c)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCountLimit(1,id+100)
-    e2:SetCondition(s.spcon2)
     e2:SetTarget(s.sptg2)
     e2:SetOperation(s.spop2)
     c:RegisterEffect(e2)
@@ -65,28 +64,25 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
     Duel.NegateEffect(ev)
 end
 
-function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
-end
-
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
+        and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
-        Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-        -- Cambiar el nivel del monstruo invocado a 4
-        local e1=Effect.CreateEffect(c)
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-        e1:SetRange(LOCATION_MZONE)
-        e1:SetCode(EFFECT_CHANGE_LEVEL)
-        e1:SetValue(4)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-        c:RegisterEffect(e1,true)
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) then
+        if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)~=0 then
+            -- Cambiar el nivel del monstruo invocado a 4
+            local e1=Effect.CreateEffect(c)
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+            e1:SetRange(LOCATION_MZONE)
+            e1:SetCode(EFFECT_CHANGE_LEVEL)
+            e1:SetValue(4)
+            e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+            c:RegisterEffect(e1,true)
+        end
     end
 end
