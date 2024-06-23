@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--Return 1 Level/Rank 8 monster and apply an effect
+	--Return 1 Fusion/Link/Xyz/Ritual Raging Dragon monster and apply an effect
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW+CATEGORY_ATKCHANGE)
