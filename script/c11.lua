@@ -26,7 +26,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=tp|FUSPROC_CHKF
+		local chkf=tp
 		local mg=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_DECK,0,nil)
 		return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 	end
@@ -34,7 +34,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=tp|FUSPROC_CHKF
+	local chkf=tp
 	local mg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_DECK,0,nil,e)
 	local sg=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg,nil,chkf)
 	if #sg>0 then
