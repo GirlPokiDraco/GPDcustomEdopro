@@ -1,4 +1,4 @@
---Raging Dragon Realm
+--Oceano de Jeremias
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
