@@ -6,7 +6,9 @@ Este repositorio contiene una colección de custom cards para utilizar en el sim
 
 Para utilizar estas custom cards en Edopro, sigue estos pasos:
 
-Descarga el archivo `user_configs.json` desde la carpeta "extra" en este repositorio.
+### Descarga el archivo `user_configs.json` desde la carpeta "extra" en este repositorio.
+
+### Instalación:
 
 <span style="color:red">1. Abre la carpeta donde tienes instalado ProjectIgnis.</span>
 <span style="color:red">2. Encuentra la carpeta "config" dentro de la carpeta de instalación de ProjectIgnis.</span>
