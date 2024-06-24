@@ -1,55 +1,74 @@
 -- Dragón Furioso Audaz
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Efecto: Descartar esta carta para evitar que el oponente añada o robe cartas fuera de su fase de robo durante este turno
+    -- Descartar esta carta para evitar que el oponente añada o robe cartas fuera de su fase de robo durante este turno
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
     e1:SetCategory(CATEGORY_DISABLE)
+    e1:SetProperty(EFFECT_FLAG_DELAY)
     e1:SetType(EFFECT_TYPE_QUICK_O)
-    e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetCode(EVENT_CUSTOM+id)
     e1:SetRange(LOCATION_HAND)
-    e1:SetCountLimit(1,id)
-    e1:SetCondition(s.discon)
-    e1:SetCost(s.discost)
-    e1:SetOperation(s.disop)
+    e1:SetCondition(s.condition)
+    e1:SetCost(s.cost)
+    e1:SetOperation(s.operation)
     c:RegisterEffect(e1)
-    if not s.global_check then
-        s.global_check=true
+    aux.GlobalCheck(s,function()
         local ge1=Effect.CreateEffect(c)
         ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        ge1:SetCode(EVENT_PHASE_START+PHASE_DRAW+PHASE_MAIN1+PHASE_MAIN2+PHASE_END)
-        ge1:SetOperation(s.check_op)
+        ge1:SetCode(EVENT_TO_HAND)
+        ge1:SetCondition(s.regcon)
+        ge1:SetOperation(s.regop)
         Duel.RegisterEffect(ge1,0)
-    end
+    end)
 end
 
-function s.discon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetTurnPlayer()~=tp and e:GetHandler():IsDiscardable()
+function s.cfilter(c,tp)
+    return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK)
 end
 
-function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():IsDiscardable() end
-    Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
+    if Duel.GetCurrentPhase()==PHASE_DRAW or Duel.GetCurrentPhase()==PHASE_DAMAGE then return false end
+    local v=0
+    if eg:IsExists(s.cfilter,1,nil,0) then v=v+1 end
+    if eg:IsExists(s.cfilter,1,nil,1) then v=v+2 end
+    if v==0 then return false end
+    e:SetLabel(({0,1,PLAYER_ALL})[v])
+    return true
 end
 
-function s.disop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.RaiseEvent(eg,EVENT_CUSTOM+id,re,r,rp,ep,e:GetLabel())
 end
 
-function s.check_op(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetFlagEffect(tp,id)==0 then return end
-    Duel.ResetFlagEffect(tp,id)
-    local ph=Duel.GetCurrentPhase()
-    if ph~=PHASE_DRAW and ph~=PHASE_MAIN1 and ph~=PHASE_MAIN2 then
-        local e1=Effect.CreateEffect(e:GetHandler())
-        e1:SetType(EFFECT_TYPE_FIELD)
-        e1:SetCode(EFFECT_CANNOT_ADD_DECK_MONSTER)
-        e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-        e1:SetTargetRange(1,0)
-        e1:SetReset(RESET_PHASE+PHASE_END)
-        Duel.RegisterEffect(e1,tp)
-        local e2=e1:Clone()
-        e2:SetCode(EFFECT_CANNOT_DRAW)
-        Duel.RegisterEffect(e2,tp)
-    end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+    return ev==1-tp or ev==PLAYER_ALL
+end
+
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return c:IsLocation(LOCATION_HAND) and c:IsAbleToGraveAsCost() end
+    Duel.SendtoGrave(c,REASON_COST)
+end
+
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+    local e1=Effect.CreateEffect(e:GetHandler())
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetCode(EFFECT_CANNOT_TO_HAND)
+    e1:SetTargetRange(LOCATION_DECK,LOCATION_DECK)
+    e1:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e1,tp)
+    local e2=Effect.CreateEffect(e:GetHandler())
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e2:SetCode(EFFECT_CANNOT_DRAW)
+    e2:SetReset(RESET_PHASE+PHASE_END)
+    e2:SetTargetRange(1,1)
+    Duel.RegisterEffect(e2,tp)
+    local e3=Effect.CreateEffect(e:GetHandler())
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+    e3:SetDescription(aux.Stringid(id,1))
+    e3:SetReset(RESET_PHASE+PHASE_END)
+    e3:SetTargetRange(1,1)
+    Duel.RegisterEffect(e3,tp)
 end
