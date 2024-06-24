@@ -1,7 +1,7 @@
 {
     "repos": [
         {
-	    "url": "https://github.com/LucianoGamerPro/GPDcustomEdopro",
+	    "url": "https://github.com/GirlPokiDraco/GPDcustomEdopro",
 	    "repo_name": "GPD Custom Cards",
 	    "repo_path": "./repositories/GPDCustoms",
 	    "should_update": true,
