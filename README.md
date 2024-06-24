@@ -21,7 +21,7 @@ Aquí tienes algunos ejemplos de nuestras custom cards:
 
 ### Carta 1
 
-[![Carta 1](ruta_a_la_imagen_1)](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.pnghttps://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.png)
+[![Carta 1](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.pnghttps://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.png)](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.pnghttps://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.png)
 
 ![Carta 1]()
 
