@@ -32,21 +32,27 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
+    -- Efecto para evitar que el oponente añada cartas a la mano
     local e1=Effect.CreateEffect(e:GetHandler())
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_CANNOT_TO_HAND)
-    e1:SetTargetRange(LOCATION_DECK,LOCATION_DECK)
+    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e1:SetTargetRange(0,1)
+    e1:SetTarget(s.handlimit)
     e1:SetReset(RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e1,tp)
-    local e2=e1:Clone()
+    -- Efecto para evitar que el oponente robe cartas
+    local e2=Effect.CreateEffect(e:GetHandler())
+    e2:SetType(EFFECT_TYPE_FIELD)
     e2:SetCode(EFFECT_CANNOT_DRAW)
+    e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e2:SetTargetRange(0,1)
+    e2:SetReset(RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e2,tp)
-    local e3=Effect.CreateEffect(e:GetHandler())
-    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-    e3:SetDescription(aux.Stringid(id,1))
-    e3:SetReset(RESET_PHASE+PHASE_END)
-    e3:SetTargetRange(1,1)
-    Duel.RegisterEffect(e3,tp)
+end
+
+function s.handlimit(e,c,tp,re)
+    return not re:IsHasType(EFFECT_TYPE_DRAW)
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
