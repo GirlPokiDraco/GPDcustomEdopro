@@ -10,10 +10,10 @@ Para utilizar estas custom cards en Edopro, sigue estos pasos:
 
 ### Instalación:
 
-<span style="color:red">1. Abre la carpeta donde tienes instalado ProjectIgnis.</span>
-<span style="color:red">2. Encuentra la carpeta "config" dentro de la carpeta de instalación de ProjectIgnis.</span>
-<span style="color:red">3. Copia el archivo `user_configs.json` descargado en la carpeta "config".</span>
-<span style="color:red">4. Abre el juego ProjectIgnis. El juego comenzará a descargar automáticamente las imágenes de tus custom cards y cualquier otro archivo necesario.</span>
+<span style="color:red">1. </span>Abre la carpeta donde tienes instalado ProjectIgnis.  
+<span style="color:red">2. </span>Encuentra la carpeta "config" dentro de la carpeta de instalación de ProjectIgnis.  
+<span style="color:red">3. </span>Copia el archivo `user_configs.json` descargado en la carpeta "config".  
+<span style="color:red">4. </span>Abre el juego ProjectIgnis. El juego comenzará a descargar automáticamente las imágenes de tus custom cards y cualquier otro archivo necesario.
 
 ## Ejemplos
 
