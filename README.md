@@ -15,6 +15,10 @@ Para utilizar estas custom cards en Edopro, sigue estos pasos:
 <span style="color:red">**3.**</span> Copia el archivo `user_configs.json` descargado en la carpeta "config".  
 <span style="color:red">**4.**</span> Abre el juego ProjectIgnis. El juego comenzará a descargar automáticamente las imágenes, scripts y cualquier otro archivo necesario de mis custom cards.
 
+## Descripción del Deck
+
+El Deck "Raging Dragon" es un poderoso conjunto de cartas diseñado principalmente en una estrategia de dragones de fusión. Utiliza las cartas mágicas y efectos de monstruos a tu favor para establecer un campo fuerte que controle e interrumpa las jugadas del rival.
+
 ## Ejemplos
 
 Aquí tienes algunos ejemplos de mis custom cards:
