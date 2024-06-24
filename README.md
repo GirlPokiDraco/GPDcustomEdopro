@@ -6,7 +6,7 @@ Este repositorio contiene una colección de custom cards para utilizar en el sim
 
 Para utilizar estas custom cards en Edopro, sigue estos pasos:
 
-### Descarga el archivo `user_configs.json` desde la carpeta "extra" en este repositorio.
+### Descarga el archivo `user_configs.json` desde la carpeta "extra" en este [enlace](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/extra/user_configs.json).
 
 ### Instalación:
 
