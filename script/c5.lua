@@ -1,7 +1,7 @@
 -- Dragón Furioso Audaz
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Efecto: Negar activaciones de efectos
+    -- Efecto: Negar activaciones de efectos que añaden o roban del Deck
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
     e1:SetCategory(CATEGORY_DISABLE)
@@ -17,13 +17,12 @@ function s.initial_effect(c)
 end
 
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsChainDisablable(ev)
+    return Duel.IsChainDisablable(ev) and e:GetHandler():IsDiscardable()
 end
 
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-    local c=e:GetHandler()
-    if chk==0 then return c:IsDiscardable() end
-    Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+    if chk==0 then return e:GetHandler():IsDiscardable() end
+    Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
