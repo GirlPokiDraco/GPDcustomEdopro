@@ -23,4 +23,12 @@ Aquí tienes algunos ejemplos de nuestras custom cards:
 
 ![Carta 1](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/12.png)
 
+### Carta 2
+
+![Carta 2](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/13.png)
+
+### Carta 3
+
+![Carta 3](https://github.com/LucianoGamerPro/GPDcustomEdopro/blob/main/pics/8.png)
+
 ¡Disfruta de las custom cards y que tus duelos sean emocionantes!
