@@ -1,61 +1,73 @@
--- Evil Kuriboh
+--Darkness Raging Dragon
 local s,id=GetID()
 function s.initial_effect(c)
-    -- Discard to change ATK and redirect damage
+    --Add 1 "Raging Dragon" card from Deck to hand
     local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,0))
-    e1:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DAMAGE)
-    e1:SetType(EFFECT_TYPE_QUICK_O)
-    e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetRange(LOCATION_HAND)
-    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e1:SetCountLimit(1,{id,0},EFFECT_COUNT_CODE_DUEL)
-    e1:SetCost(s.cost)
-    e1:SetTarget(s.target)
-    e1:SetOperation(s.operation)
+    e1:SetDescription(aux.Stringid(id,1))
+    e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+    e1:SetCode(EVENT_SUMMON_SUCCESS)
+    e1:SetCountLimit(1,{id,1})
+    e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+    e1:SetTarget(s.thtg)
+    e1:SetOperation(s.thop)
     c:RegisterEffect(e1)
+    local e2=e1:Clone()
+    e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+    c:RegisterEffect(e2)
+    
+    -- Special Summon when used as material
+    local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(id,2))
+    e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e3:SetProperty(EFFECT_FLAG_DELAY)
+    e3:SetCode(EVENT_BE_MATERIAL)
+    e3:SetCountLimit(1,{id,2})
+    e3:SetCondition(s.spcon)
+    e3:SetCost(s.spcost)
+    e3:SetTarget(s.sptg)
+    e3:SetOperation(s.spop)
+    c:RegisterEffect(e3)
 end
 
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():IsDiscardable() end
-    Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+function s.filter(c)
+    return c:IsSetCard(0x7c9) and not c:IsCode(id) and c:IsAbleToHand()
 end
 
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
-    if tc then
-        -- Set ATK to 0
-        local e1=Effect.CreateEffect(e:GetHandler())
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-        e1:SetValue(0)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e1)
-        
-        -- Redirect battle damage
-        local e2=Effect.CreateEffect(e:GetHandler())
-        e2:SetType(EFFECT_TYPE_SINGLE)
-        e2:SetCode(EFFECT_REFLECT_BATTLE_DAMAGE)
-        e2:SetValue(1)
-        e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e2)
-        
-        -- Double damage
-        local e3=Effect.CreateEffect(e:GetHandler())
-        e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-        e3:SetOperation(s.damop)
-        e3:SetReset(RESET_PHASE+PHASE_END)
-        Duel.RegisterEffect(e3,tp)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
+    if #g>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
     end
 end
 
-function s.damop(e,tp,eg,ep,ev,re,r,rp)
-    if ep~=tp then
-        Duel.ChangeBattleDamage(ep,ev*2)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return r==REASON_FUSION or r==REASON_LINK
+end
+
+function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_DECK,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+    local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_DECK,0,1,1,nil)
+    Duel.SendtoGrave(g,REASON_COST)
+end
+
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:IsRelateToEffect(e) then
+        Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
     end
 end
