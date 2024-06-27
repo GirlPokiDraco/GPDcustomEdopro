@@ -7,7 +7,7 @@ function s.initial_effect(c)
     --Banish all opponent's cards and deal damage
     local e0=Effect.CreateEffect(c)
     e0:SetDescription(aux.Stringid(id,0))
-    e0:SetCategory(CATEGORY_REMOVE)
+    e0:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
     e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e0:SetCode(EVENT_SPSUMMON_SUCCESS)
     e0:SetProperty(EFFECT_FLAG_DELAY)
@@ -59,6 +59,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
     if chk==0 then return #g>0 end
     Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,#g*300)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
