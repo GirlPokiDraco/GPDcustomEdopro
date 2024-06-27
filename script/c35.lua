@@ -4,8 +4,8 @@ function s.initial_effect(c)
     --Activate
     local e1=Fusion.CreateSummonEff{handler=c,matfilter=Fusion.OnFieldMat,extrafil=s.fextra,extratg=s.extratg}
     e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
-    e1:SetCountLimit(1, id)  -- Limitar a una vez por turno
-    e1:SetCost(s.cost)  -- Añadir el coste de 1000 LP
+    e1:SetCountLimit(1, id)  
+    e1:SetCost(s.cost)  
     c:RegisterEffect(e1)
 end
 
