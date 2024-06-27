@@ -33,10 +33,11 @@ function s.initial_effect(c)
     e2:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_DRAGON))
     e2:SetValue(aux.tgoval)
     c:RegisterEffect(e2)
-    --Special summon 1 DRAGON monster from GY
+    --Quick effect: Special summon 1 DRAGON monster from GY
     local e3=Effect.CreateEffect(c)
     e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e3:SetType(EFFECT_TYPE_IGNITION)
+    e3:SetType(EFFECT_TYPE_QUICK_O)
+    e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetRange(LOCATION_MZONE)
     e3:SetCountLimit(1)
     e3:SetTarget(s.sptg)
@@ -45,7 +46,7 @@ function s.initial_effect(c)
 end
 s.listed_names={12}
 function s.ffilter(c,fc,sumtype,tp)
-    return c:IsRace(RACE_DRAGON,fc,sumtype,tp) and c:IsType(TYPE_FUSION)
+    return c:IsRace(RACE_DRAGON,fc,sumtype,tp)
 end
 function s.valcheck(e,c)
     if c:GetMaterialCount()==3 and c:GetMaterial():FilterCount(Card.IsRace,nil,RACE_DRAGON)==3 and c:GetMaterial():FilterCount(Card.IsType,nil,TYPE_FUSION)==3 then
