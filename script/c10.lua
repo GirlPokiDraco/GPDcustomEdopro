@@ -1,13 +1,12 @@
---Void Raging Dragon
+--Gigant Raging Dragon
 local s,id=GetID()
 function s.initial_effect(c)
     -- Special Summon procedure
-    c:EnableReviveLimit()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e1:SetRange(LOCATION_EXTRA)
+    e1:SetRange(LOCATION_HAND)
     e1:SetCondition(s.spcon)
     e1:SetOperation(s.spop)
     c:RegisterEffect(e1)
@@ -32,14 +31,15 @@ end
 
 function s.spcon(e,c)
     if c==nil then return true end
-    local tp=c:GetControler()
-    return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-        and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,2,nil)
+    return Duel.IsExistingMatchingCard(s.spfilter,c:GetControler(),LOCATION_GRAVE,0,2,nil)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
     local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,2,2,nil)
-    Duel.Remove(g,POS_FACEUP,REASON_COST)
+    if #g==2 then
+        Duel.Remove(g,POS_FACEUP,REASON_COST)
+    end
 end
 
 function s.rmfilter(c)
@@ -55,7 +55,7 @@ end
 
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
     if #g>0 then
         Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
     end
