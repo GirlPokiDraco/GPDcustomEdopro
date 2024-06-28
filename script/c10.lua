@@ -19,8 +19,10 @@ function s.initial_effect(c)
     e2:SetCode(EVENT_FREE_CHAIN)
     e2:SetRange(LOCATION_MZONE)
     e2:SetHintTiming(0,TIMING_MAIN_END)
-    e2:SetCountLimit(1)
+    e2:SetCountLimit(1,id)
+    e2:SetCondition(s.rmcon)
     e2:SetCost(s.rmcost)
+    e2:SetTarget(s.rmtg)
     e2:SetOperation(s.rmop)
     c:RegisterEffect(e2)
 end
@@ -42,6 +44,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
     end
 end
 
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil)
+end
+
 function s.rmfilter(c)
     return c:IsSetCard(0x7c9) and c:IsAbleToRemoveAsCost()
 end
@@ -51,6 +57,11 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
     local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_GRAVE,0,1,1,nil)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+
+function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return true end
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_ONFIELD)
 end
 
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
